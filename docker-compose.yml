@@ -1,0 +1,46 @@
+--- 
+services: 
+  mongo: 
+    deploy: 
+      replicas: 1
+      resources: 
+        limits: 
+          cpus: "0.15"
+          memory: 200M
+      restart_policy: 
+        condition: on-failure
+    image: "llanosvergara1/p1gps:db"
+    ports: 
+      - "28017:28017"
+      - "27017:27017"
+    volumenes: 
+      - "db-data:/data/db"
+  order: 
+    depends_on: 
+      - mongo
+    deploy: 
+      replicas: 1
+      resources: 
+        limits: 
+          cpus: "0.3"
+          memory: 500M
+      restart_policy: 
+        condition: on-failure
+    image: "llanosvergara1/p1gps:order"
+    ports: 
+      - "8080:8080"
+  web: 
+    deploy: 
+      replicas: 1
+      resources: 
+        limits: 
+          cpus: "0.25"
+          memory: 300M
+      restart_policy: 
+        condition: on-failure
+    image: "llanosvergara1:p1gps:web"
+    ports: 
+      - "80:8080"
+version: "3"
+volumes: 
+  db-data: ~
